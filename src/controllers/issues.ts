@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import { prisma } from "../app";
 
 export const postNewIssue = async (req: Request, res: Response) => {
-  try {
-    const { title, description, priority } = req.body;
+  const { title, description, priority } = req.body;
 
+  try {
     // Validar campos requeridos
-    /* if (
+    /*     if (
       !title ||
       !description ||
       !priority ||
@@ -17,6 +17,19 @@ export const postNewIssue = async (req: Request, res: Response) => {
     } */
 
     const usuario: number = req.body.usuarioConfirmado.id;
+
+    // Verificar si ya existe una Issue para el usuario
+    const existingIssue = await prisma.issue.findUnique({
+      where: {
+        userId: usuario,
+      },
+    });
+
+    if (existingIssue) {
+      return res.status(400).json({
+        msg: "Ya existe una Issue para este usuario",
+      });
+    }
 
     const issueData = {
       title,

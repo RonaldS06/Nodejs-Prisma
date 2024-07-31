@@ -7,7 +7,7 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   const { rol } = req.body.usuarioConfirmado;
 
   // Si el rol no es de administrador, enviamos un error
-  if (rol !== ROLES.admin) {
+  if (rol === ROLES.admin) {
     res.status(401).json({ msg: "El usuario no es administrador" });
     return;
   }
